@@ -1,0 +1,11 @@
+<% if notice %>
+  <br>
+  <div class="alert alert-info" role="alert" style="margin: 0px">
+    <%= notice %>
+  </div>
+  <% elsif alert %>
+  <br>
+  <div class="alert alert-danger" role="alert" style="margin: 0px">
+    <%= alert %>
+  </div>
+<% end %>

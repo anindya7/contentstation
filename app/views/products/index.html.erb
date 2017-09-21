@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">Search Articles</div>
+      <div class="panel-body">
+        <%= simple_form_for(:search, url: products_search_path, method: :post, class: 'form-horizontal') do |f| %>
+          <div class="form-inputs">
+            <%= f.input :industry_id, collection: Industry.all %>
+            <%= f.input :word_length, :input_html => { :type => "number" } %>
+            <%= f.input :price, :input_html => { :type => "number" } %>
+            <%= f.input :rating, collection: 1..5 %>
+            <%= f.input :author %>
+            <%= f.input :complexity, collection: 1..5 %>
+            <%= f.input :exclusivity, collection: {'Free' => 'Free', 'Exclusive' => 'Exclusive'} %>
+          </div>
+          <div class="form-actions">
+            <%= f.button :submit, "Submit", class: 'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <% if @products.nil? %>
+            Search Results
+          <% else %>
+            Recent Articles
+          <% end %>
+        </div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <% unless @products.nil? %>
+              <% unless @products.any? %>
+                No results found.
+              <% else %>
+                <% @products.each do |product| %>
+                  <li class="list-group-item">
+                    <h4><%= product.name %></h4>
+                    <p class="text-warning">Author: <%= product.author %></p>
+                    <% if product.exclusivity == "Free" %>
+                      <p class="text-success">Free</p>
+                    <% else %>
+                      <p class="text-primary">Price: <%= product.price %></p>
+                    <% end %>
+                    <%= form_tag("/orders", method: "post") do %>
+                      <%= hidden_field_tag(:product_id, product.id) %>
+                      <%= submit_tag("Buy", class: "btn btn-success") %>
+                    <% end %>
+                  </li>
+                <% end %>
+              <% end %>
+            <% else %>
+              <% unless @results.any? %>
+                No results found.
+              <% else %>
+                <% @results.each do |product| %>
+                  <li class="list-group-item">
+                    <h4><%= product.name %></h4>
+                    <p class="text-warning">Author: <%= product.author %></p>
+                    <% if product.exclusivity == "Free" %>
+                      <p class="text-success">Free</p>
+                    <% else %>
+                      <p class="text-primary">Price: <%= product.price %></p>
+                    <% end %>
+                    <%= form_tag("/orders", method: "post") do %>
+                      <%= hidden_field_tag(:product_id, product.id) %>
+                      <%= submit_tag("Buy", class: "btn btn-success") %>
+                    <% end %>
+                  </li>
+                <% end %>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+  </div>
+</div>
