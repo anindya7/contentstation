@@ -11,7 +11,7 @@
             <%= f.input :rating, collection: 1..5 %>
             <%= f.input :author %>
             <%= f.input :complexity, collection: 1..5 %>
-            <%= f.input :exclusivity, collection: {'Free' => 'Free', 'Exclusive' => 'Exclusive'} %>
+            <%= f.input :exclusivity, collection: Exclusivity.all %>
           </div>
           <div class="form-actions">
             <%= f.button :submit, "Submit", class: 'btn btn-primary' %>
@@ -41,7 +41,7 @@
                   <li class="list-group-item">
                     <h4><%= product.name %></h4>
                     <p class="text-warning">Author: <%= product.author %></p>
-                    <% if product.exclusivity == "Free" %>
+                    <% if product.exclusivity_id == @free.id %>
                       <p class="text-success">Free</p>
                     <% else %>
                       <p class="text-primary">Price: <%= product.price %></p>
@@ -71,7 +71,7 @@
                   <li class="list-group-item">
                     <h4><%= product.name %></h4>
                     <p class="text-warning">Author: <%= product.author %></p>
-                    <% if product.exclusivity == "Free" %>
+                    <% if product.exclusivity_id == @free.id %>
                       <p class="text-success">Free</p>
                     <% else %>
                       <p class="text-primary">Price: <%= product.price %></p>

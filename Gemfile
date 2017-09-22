@@ -19,6 +19,7 @@ gem 'tether-rails'
 gem 'figaro'
 gem 'seed_dump'
 gem 'kaminari'
+gem 'paypal-recurring'
 # gem 'acts-as-taggable-on', '~> 4.0'
 
 # Use Puma as the app server

@@ -5,10 +5,11 @@ class Product < ApplicationRecord
   scope :by_rating, lambda { |rating| where('rating >=', rating)}
   scope :by_author, lambda { |author| where('lower(author) LIKE lower(?)', "%#{author}%")}
   scope :by_complexity, lambda { |comp| where(:complexity => comp)}
-  scope :by_exclusivity, lambda { |ex| where('lower(exclusivity) = lower(?)', ex)}
+  scope :by_exclusivity, lambda { |ex| where(:exclusivity_id => ex)}
 
   belongs_to :industry
-  has_many :taggings, dependent: :destroy
+  belongs_to :exclusivity
+  has_many :taggings
   has_many :tags, through: :taggings
   validates_presence_of :name, :author, :industry_id, :word_length, :exclusivity, :complexity, :price, :file_url
   validates :price, numericality: { greater_than_or_equal_to: 0,  only_integer: true }

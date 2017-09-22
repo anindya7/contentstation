@@ -11,10 +11,10 @@
                 <% @orders.each do |order| %>
                   <li class="list-group-item">
                     <h4><%= order.product.name %></h4>
-                    <% if product.exclusivity == "Free" %>
+                    <% if order.product.exclusivity_id == @free.id %>
                       <p class="text-success">Free</p>
                     <% else %>
-                      <p class="text-primary">Price: <%= product.price %></p>
+                      <p class="text-primary">Price: <%= order.product.price %></p>
                     <% end %>
                     <%= form_tag("/order/download", method: "get") do %>
                       <%= hidden_field_tag(:order_id, order.id) %>

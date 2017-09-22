@@ -4,11 +4,13 @@ class ProductsController < ApplicationController
   def index
     if params[:tag].present?
       tag = Tag.find_by_name(params[:tag])
+      @free = Exclusivity.find_by_name('Free')
       @products = tag.products.page(params[:page]).per(5) 
     else
       all_products = Product.all
+      @free = Exclusivity.find_by_name('Free')
       ordered_products =  current_user.ordered_products
-      unavail_products = all_products.select {|prod| (prod.exclusivity == "Exclusive") && (prod.has_been_ordered?) }
+      unavail_products = all_products.select {|prod| (prod.exclusivity_id > @free.id ) && (prod.has_been_ordered?) }
       @products = all_products - ordered_products - unavail_products
       # @products.page(params[:page]).per(5) 
       @products = Kaminari.paginate_array(@products).page(params[:page]).per(5)
@@ -45,8 +47,9 @@ class ProductsController < ApplicationController
     end
 
     all_products = Product.all
+    @free = Exclusivity.find_by_name('Free')
     ordered_products =  current_user.ordered_products
-    unavail_products = all_products.select {|prod| (prod.exclusivity == "Exclusive") && (prod.has_been_ordered?) }
+    unavail_products = all_products.select {|prod| (prod.exclusivity_id > @free.id ) && (prod.has_been_ordered?) }
     @results = @results - ordered_products - unavail_products
     # @results = @results.page(params[:page]).per(5)
     @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)

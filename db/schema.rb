@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170922075707) do
+ActiveRecord::Schema.define(version: 20170922110939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "exclusivities", force: :cascade do |t|
+    t.string "name"
+    t.integer "count"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "industries", force: :cascade do |t|
     t.string "name"
@@ -35,12 +42,12 @@ ActiveRecord::Schema.define(version: 20170922075707) do
     t.string "author"
     t.bigint "industry_id"
     t.integer "word_length"
-    t.string "exclusivity"
     t.integer "complexity"
-    t.integer "price", default: 0
+    t.decimal "price", default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "file_url"
+    t.integer "exclusivity_id"
     t.index ["industry_id"], name: "index_products_on_industry_id"
   end
 
