@@ -3,7 +3,7 @@
     <div class="panel panel-default">
       <div class="panel-heading">Search Articles</div>
       <div class="panel-body">
-        <%= simple_form_for(:search, url: products_search_path, method: :post, class: 'form-horizontal') do |f| %>
+        <%= simple_form_for(:search, url: products_search_path, method: :get, class: 'form-horizontal') do |f| %>
           <div class="form-inputs">
             <%= f.input :industry_id, collection: Industry.all %>
             <%= f.input :word_length, :input_html => { :type => "number" } %>

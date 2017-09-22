@@ -11,6 +11,9 @@ class Product < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
   validates_presence_of :name, :author, :industry_id, :word_length, :exclusivity, :complexity, :price, :file_url
+  validates :price, numericality: { greater_than_or_equal_to: 0,  only_integer: true }
+  validates :word_length, numericality: { greater_than_or_equal_to: 1,  only_integer: true }
+  validates :complexity, numericality: { greater_than_or_equal_to: 1, less_than_or_equal_to: 5,  only_integer: true }
   paginates_per 1
 
   def has_been_ordered?

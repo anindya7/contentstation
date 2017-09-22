@@ -4,13 +4,14 @@ class ProductsController < ApplicationController
   def index
     if params[:tag].present?
       tag = Tag.find_by_name(params[:tag])
-      @products = tag.products.page(params[:page]).per(1) 
+      @products = tag.products.page(params[:page]).per(5) 
     else
       all_products = Product.all
       ordered_products =  current_user.ordered_products
       unavail_products = all_products.select {|prod| (prod.exclusivity == "Exclusive") && (prod.has_been_ordered?) }
       @products = all_products - ordered_products - unavail_products
-      @products.page(params[:page]).per(1) 
+      # @products.page(params[:page]).per(5) 
+      @products = Kaminari.paginate_array(@products).page(params[:page]).per(5)
     end
   end
 
@@ -47,8 +48,8 @@ class ProductsController < ApplicationController
     ordered_products =  current_user.ordered_products
     unavail_products = all_products.select {|prod| (prod.exclusivity == "Exclusive") && (prod.has_been_ordered?) }
     @results = @results - ordered_products - unavail_products
-
-    # render json: @results
+    # @results = @results.page(params[:page]).per(5)
+    @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
     render 'index'
   end
 
