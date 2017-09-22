@@ -18,6 +18,8 @@ gem 'rails_admin', '~> 1.2'
 gem 'tether-rails'
 gem 'figaro'
 gem 'seed_dump'
+gem 'kaminari'
+# gem 'acts-as-taggable-on', '~> 4.0'
 
 # Use Puma as the app server
 gem 'puma', '~> 3.7'

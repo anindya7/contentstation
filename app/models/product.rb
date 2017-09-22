@@ -8,7 +8,10 @@ class Product < ApplicationRecord
   scope :by_exclusivity, lambda { |ex| where('lower(exclusivity) = lower(?)', ex)}
 
   belongs_to :industry
+  has_many :taggings, dependent: :destroy
+  has_many :tags, through: :taggings
   validates_presence_of :name, :author, :industry_id, :word_length, :exclusivity, :complexity, :price, :file_url
+  paginates_per 1
 
   def has_been_ordered?
     Order.where(product_id: self.id).any?

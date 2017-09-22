@@ -2,10 +2,16 @@ class ProductsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    all_products = Product.all
-    ordered_products =  current_user.ordered_products
-    unavail_products = all_products.select {|prod| (prod.exclusivity == "Exclusive") && (prod.has_been_ordered?) }
-    @products = all_products - ordered_products - unavail_products
+    if params[:tag].present?
+      tag = Tag.find_by_name(params[:tag])
+      @products = tag.products.page(params[:page]).per(1) 
+    else
+      all_products = Product.all
+      ordered_products =  current_user.ordered_products
+      unavail_products = all_products.select {|prod| (prod.exclusivity == "Exclusive") && (prod.has_been_ordered?) }
+      @products = all_products - ordered_products - unavail_products
+      @products.page(params[:page]).per(1) 
+    end
   end
 
   def search

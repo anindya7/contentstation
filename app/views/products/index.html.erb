@@ -25,6 +25,8 @@
         <div class="panel-heading">
           <% if @products.nil? %>
             Search Results
+          <% elsif params[:tag].present? %>
+            Results for <strong><%= params[:tag] %></strong>
           <% else %>
             Recent Articles
           <% end %>
@@ -44,12 +46,22 @@
                     <% else %>
                       <p class="text-primary">Price: <%= product.price %></p>
                     <% end %>
+                    <div>
+                      <strong>Tags: </strong> 
+                      <% product.tags.each do |tag| %>
+                        <%= link_to products_path(tag: tag.name) do %>
+                          <span class="badge"><%= tag.name %></span>&nbsp;
+                        <% end %>
+                      <% end %>
+                    </div>
+                    <hr>
                     <%= form_tag("/orders", method: "post") do %>
                       <%= hidden_field_tag(:product_id, product.id) %>
                       <%= submit_tag("Buy", class: "btn btn-success") %>
                     <% end %>
                   </li>
                 <% end %>
+                <%= paginate @products %>
               <% end %>
             <% else %>
               <% unless @results.any? %>
@@ -70,9 +82,11 @@
                     <% end %>
                   </li>
                 <% end %>
+                <%= paginate @results %>
               <% end %>
             <% end %>
           </ul>
+          <hr>
         </div>
       </div>
   </div>
