@@ -45,19 +45,47 @@ class ProductsController < ApplicationController
     else
       @results = @results.by_exclusivity(my_params[:exclusivity]) if my_params[:exclusivity].present?
     end
+    if @results.nil?
+      @results = Product.by_rating(my_params[:rating] ) if my_params[:rating].present?
+    else
+      @results = @results.by_rating(my_params[:rating]) if my_params[:rating].present?
+    end
 
     all_products = Product.all
     @free = Exclusivity.find_by_name('Free')
     ordered_products =  current_user.ordered_products
     unavail_products = all_products.select {|prod| (prod.exclusivity_id > @free.id ) && (prod.has_been_ordered?) }
-    @results = @results - ordered_products - unavail_products
-    # @results = @results.page(params[:page]).per(5)
-    @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
+    unless @results.nil?
+      @results = @results - ordered_products - unavail_products
+      # @results = @results.page(params[:page]).per(5)
+      @results = Kaminari.paginate_array(@results).page(params[:page]).per(5)
+    end
     render 'index'
+  end
+
+  def rate
+    product = Product.find(params[:product_id]) if params[:product_id].present?
+    unless product.nil?
+      if !product.ordered_by_user?(current_user.id)
+        redirect_to orders_path
+      elsif Rating.where(user_id: current_user.id).where(product_id: product.id).any?
+        flash[:notice] = "You have already rated this product"
+        redirect_to request.referer
+      else
+        rating = Rating.new(rating_params)
+        rating.user = current_user
+        rating.save
+        redirect_to request.referer
+      end
+    end
   end
 
   def search_params
     params.require(:search).permit(:industry_id, :word_length, :price, :rating, :author, :complexity, :exclusivity)
+  end
+
+  def rating_params
+    params.permit(:product_id,:rating)
   end
 
 end

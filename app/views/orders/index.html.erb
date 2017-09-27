@@ -1,3 +1,7 @@
+<% content_for :styles do %>
+  
+<% end %>
+
 <div class="row">
   <div class="col-md-8 col-md-offset-2">
 
@@ -20,6 +24,14 @@
                       <%= hidden_field_tag(:order_id, order.id) %>
                       <%= submit_tag("Download", class: "btn btn-success", disabled: false) %>
                     <% end %>
+                    <% unless current_user.has_rated_product?(order.product.id) %>
+                      <hr>
+                      <%= form_tag("/product/rate", method: "post", id:"rate_form", class: 'form-inline ') do %>
+                        <%= hidden_field_tag(:product_id, order.product.id) %>
+                        <%= label(:rating, 'Your rating') %>
+                        <%= select_tag(:rating, options_for_select(1..5), class: 'form-control') %>
+                      <% end %>
+                    <% end %>
                   </li>
                 <% end %>
             </ul>
@@ -31,3 +43,10 @@
 
   </div>
 </div>
+<script type="text/javascript">
+    $(function() {
+      $('#rating').change(function() {
+          this.form.submit();
+      });
+    });  
+  </script>

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :orders, only: [:create, :index]
   get 'products/search' => 'products#search'
   get '/order/download' => 'orders#download_article'
+  post '/product/rate' => 'products#rate'
   get '/paypal/checkout', to: 'orders#paypal_checkout'
   root "home#index"
 end

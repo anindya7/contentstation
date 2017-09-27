@@ -7,4 +7,8 @@ class User < ApplicationRecord
   def ordered_products
     Product.all.select {|prod| prod.ordered_by_user?(self.id) }
   end
+
+  def has_rated_product?(product)
+  	Rating.where(user_id: self.id, product_id: product).any?
+  end
 end

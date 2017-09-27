@@ -64,7 +64,7 @@
                 <%= paginate @products %>
               <% end %>
             <% else %>
-              <% unless @results.any? %>
+              <% if @results.nil? or @results.empty? %>
                 No results found.
               <% else %>
                 <% @results.each do |product| %>
@@ -76,6 +76,15 @@
                     <% else %>
                       <p class="text-primary">Price: <%= product.price %></p>
                     <% end %>
+                    <div>
+                      <strong>Tags: </strong> 
+                      <% product.tags.each do |tag| %>
+                        <%= link_to products_path(tag: tag.name) do %>
+                          <span class="badge"><%= tag.name %></span>&nbsp;
+                        <% end %>
+                      <% end %>
+                    </div>
+                    <hr>
                     <%= form_tag("/orders", method: "post") do %>
                       <%= hidden_field_tag(:product_id, product.id) %>
                       <%= submit_tag("Buy", class: "btn btn-success") %>
