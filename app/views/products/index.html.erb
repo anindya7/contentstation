@@ -1,8 +1,8 @@
 <div class="row">
-  <div class="col-md-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">Search Articles</div>
-      <div class="panel-body">
+  <div class="col-md-3">
+    <div class="panel panel-default" style="background-color:#263238;padding:5px;color:white;">
+      <div class="panel-heading" style="padding:10px;"><strong>Search Articles</strong></div>
+      <div class="panel-body" style="padding:10px;">
         <%= simple_form_for(:search, url: products_search_path, method: :get, class: 'form-horizontal') do |f| %>
           <div class="form-inputs">
             <%= f.input :industry_id, collection: Industry.all %>
@@ -14,15 +14,17 @@
             <%= f.input :exclusivity, collection: Exclusivity.all %>
           </div>
           <div class="form-actions">
-            <%= f.button :submit, "Submit", class: 'btn btn-primary' %>
+            <%= f.submit "Search", class: 'btn btn-complete' %>
           </div>
         <% end %>
       </div>
     </div>
   </div>
-  <div class="col-md-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">
+  <div class="col-md-9">
+    <div class="container sm-padding-10" style="padding-top: 20px;">
+            <%= render 'partials/flash' %>
+      <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+        <div class="card-header ">
           <% if @products.nil? %>
             Search Results
           <% elsif params[:tag].present? %>
@@ -30,21 +32,24 @@
           <% else %>
             Recent Articles
           <% end %>
+          <div class="clearfix"></div>
         </div>
-        <div class="panel-body">
-          <ul class="list-group">
+        <div class="card-block">
+          <br>
+          <!-- <ul class="list-group"> -->
             <% unless @products.nil? %>
               <% unless @products.any? %>
                 No articles available.
               <% else %>
                 <% @products.each do |product| %>
-                  <li class="list-group-item">
-                    <h4><%= product.name %></h4>
-                    <p class="text-warning">Author: <%= product.author %></p>
+                  <!-- <li class=""> -->
+                    <div class="card card-block">
+                    <h4><strong><%= product.name %></strong></h4>
+                    <p class="text-complete">Author: <%= product.author %></p>
                     <% if product.exclusivity_id == @free.id %>
                       <p class="text-success">Free</p>
                     <% else %>
-                      <p class="text-primary">Price: <%= product.price %></p>
+                      <p class="text-primary">Price: $<%= product.price %></p>
                     <% end %>
                     <div>
                       <strong>Tags: </strong> 
@@ -63,7 +68,8 @@
                     <% else %>
                       <%= link_to "Buy", paypal_checkout_path(product_id: product.id), class: 'btn btn-success' %>
                     <% end %>
-                  </li>
+                  <!-- </li> -->
+                  </div>
                 <% end %>
                 <%= paginate @products %>
               <% end %>
@@ -72,13 +78,14 @@
                 No results found.
               <% else %>
                 <% @results.each do |product| %>
-                  <li class="list-group-item">
-                    <h4><%= product.name %></h4>
+                  <!-- <li class="list-group-item"> -->
+                    <div class="card card-block">
+                    <h4><strong><%= product.name %></strong></h4>
                     <p class="text-warning">Author: <%= product.author %></p>
                     <% if product.exclusivity_id == @free.id %>
                       <p class="text-success">Free</p>
                     <% else %>
-                      <p class="text-primary">Price: <%= product.price %></p>
+                      <p class="text-primary">Price: $<%= product.price %></p>
                     <% end %>
                     <div>
                       <strong>Tags: </strong> 
@@ -89,18 +96,38 @@
                       <% end %>
                     </div>
                     <hr>
-                    <%= form_tag("/orders", method: "post") do %>
-                      <%= hidden_field_tag(:product_id, product.id) %>
-                      <%= submit_tag("Buy", class: "btn btn-success") %>
+                    <%  if product.exclusivity_id == Exclusivity.find_by_name('Free').id %>
+                      <%= form_tag("/orders", method: "post") do %>
+                        <%= hidden_field_tag(:product_id, product.id) %>
+                        <%= submit_tag("Buy", class: "btn btn-success") %>
+                      <% end %>
+                    <% else %>
+                      <%= link_to "Buy", paypal_checkout_path(product_id: product.id), class: 'btn btn-success' %>
                     <% end %>
-                  </li>
+                  <!-- </li> -->
+                  </div>
                 <% end %>
                 <%= paginate @results %>
               <% end %>
             <% end %>
-          </ul>
-          <hr>
+          <!-- </ul> -->
         </div>
       </div>
+    </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

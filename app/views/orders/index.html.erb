@@ -1,20 +1,21 @@
 <% content_for :styles do %>
   
 <% end %>
-
+<div class="container sm-padding-10" style="padding-top: 10px;">
 <div class="row">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-10 offset-md-1">
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card social-card share  full-width m-b-10 no-border" data-social="item">
+        <div class="card-header">
           My Articles
         </div>
-        <div class="panel-body">
+        <div class="card-block">
           <% if @orders.any? %>
-            <ul class="list-group">
+            <!-- <ul class="list-group"> -->
                 <% @orders.each do |order| %>
-                  <li class="list-group-item">
-                    <h4><%= order.product.name %></h4>
+                  <!-- <li class="list-group-item"> -->
+                    <div class="card card-block" style="margin-top: 5px;">
+                    <h4><strong><%= order.product.name %></strong></h4>
                     <% if order.product.exclusivity_id == @free.id %>
                       <p class="text-success">Free</p>
                     <% else %>
@@ -32,9 +33,10 @@
                         <%= select_tag(:rating, options_for_select(1..5), class: 'form-control') %>
                       <% end %>
                     <% end %>
-                  </li>
+                  </div>
+                  <!-- </li> -->
                 <% end %>
-            </ul>
+            <!-- </ul> -->
           <% else %>
             No Articles added.
           <% end %>
@@ -50,3 +52,4 @@
       });
     });  
   </script>
+</div>

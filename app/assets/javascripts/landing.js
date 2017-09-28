@@ -15,4 +15,4 @@
 // require bootstrap-sprockets
 // require jquery_ujs
 // require turbolinks
-//= require_tree ../../../app/assets/javascripts/back
+//= require_tree ../../../app/assets/javascripts/landing

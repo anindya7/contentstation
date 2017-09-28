@@ -11,16 +11,6 @@
  * It is generally better to create a new file per style scope.
  *
  * require tether
- *= require_tree ../../../app/assets/stylesheets/back
- *= require_self
+ *= require_tree ../../../app/assets/stylesheets/landing
+ * require_self
  */
-
-.form-group-default .form-control{
-	text-align:center;
-	padding-top:10px;
-	height:40px;
-}
-.links_white a
-{
-	color:white!important;
-}

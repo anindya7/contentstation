@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ContentStation</title>
+    <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width">
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%#= favicon_link_tag 'favicon.ico' %>
+    <%= yield :styles %>
+  </head>
+  <body style="background-color:#e57373;">
+    <%= render 'partials/flash' %>
+    <div class="container text-center">
+      <br><br><br><br>
+        <h3 style="color:white">CONTENT<strong>STATION</strong></h3>
+        <%= yield %>
+    </div>
+  </body>
+</html>
