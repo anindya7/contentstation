@@ -6,6 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+User.create([
+{email: 'admin@contentstation.co', password: 'groupsite619', admin: true}
+])
+
 exclusivities = Exclusivity.create([
   { name: 'Free', count: 0},
   { name: 'Exclusive', count: 1}

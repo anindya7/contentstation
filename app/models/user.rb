@@ -11,4 +11,8 @@ class User < ApplicationRecord
   def has_rated_product?(product)
   	Rating.where(user_id: self.id, product_id: product).any?
   end
+
+  def admin?
+    admin == true
+  end
 end
