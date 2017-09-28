@@ -15,16 +15,11 @@ class OrdersController < ApplicationController
       if product.exclusivity_id == @free.id
         order = Order.create(user_id: current_user.id, product_id: product.id)
         flash[:notice] = "You have successfully purchased this article - #{order.product.name}"
-        redirect_to request.referrer
       elsif Order.where(product_id: product.id).any?
         flash[:notice] = "Invalid request"
-        redirect_to request.referrer
-      else
-        order = Order.create(user_id: current_user.id, product_id: product.id)
-        flash[:notice] = "You have successfully purchased this article - #{order.product.name}"
-        redirect_to request.referrer
       end
     end
+    redirect_to request.referrer
   end
 
   def download_article
@@ -51,24 +46,54 @@ class OrdersController < ApplicationController
   end
 
   def paypal_checkout
-    def paypal_checkout
-    # render json: params
-    plan = Plan.find(params[:plan_id])
-    ppr = PayPal::Recurring.new(
-      return_url: new_team_url(plan_id: plan.id),
-      cancel_url: teams_url,
-      description: plan.name+" Plan - AlphaDeals Annual Subscription.",
-      amount: plan.price.to_s+"0",
-      currency: "USD"
+    product = Product.find(params[:product_id])
+    paypal_options = {
+      no_shipping: true, # if you want to disable shipping information
+      allow_note: false, # if you want to disable notes
+      pay_on_paypal: true # if you don't plan on showing your own confirmation step
+    }
+
+    request = Paypal::Express::Request.new(
+      :username   => ENV['PAYPAL_USER'],
+      :password   => ENV['PAYPAL_PWD'],
+      :signature  => ENV['PAYPAL_SIG']
     )
-    response = ppr.checkout
-    if response.valid?
-      # Create team
-      redirect_to response.checkout_url
-    else
-      raise response.errors.inspect
+    payment_request = Paypal::Payment::Request.new(
+      :currency_code => 'USD',   # if nil, PayPal use USD as default
+      :description   => product.name,    # item description
+      :quantity      => 1,      # item quantity
+      :amount        => product.price,   # item value
+    )
+
+    begin
+      response = request.setup(
+        payment_request,
+        paypal_complete_url(product_id: product.id),
+        products_url,
+        paypal_options  # Optional
+      ) 
+    rescue Paypal::Exception::APIError => error
+      puts error.inspect
+      raise error
     end
+
+    redirect_to response.redirect_uri
   end
+
+  def complete_payment
+    if params[:PayerID] && params[:product_id] && params[:token]
+      order = Order.new
+      order.product_id = params[:product_id]
+      order.user_id = current_user.id
+      order.paypal_customer_token = params[:PayerID];
+      order.paypal_payment_token = params[:token];
+      order.save_with_paypal_payment
+      flash[:notice] = "Order successfully completed"
+      redirect_to products_path
+    else
+      flash[:notice] = "Error occured while making payments through Paypal. Please try again."
+      redirect_to products_path
+    end
   end
 
 end

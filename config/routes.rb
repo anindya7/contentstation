@@ -8,5 +8,6 @@ Rails.application.routes.draw do
   get '/order/download' => 'orders#download_article'
   post '/product/rate' => 'products#rate'
   get '/paypal/checkout', to: 'orders#paypal_checkout'
+  get '/paypal/complete', to: 'orders#complete_payment'
   root "home#index"
 end

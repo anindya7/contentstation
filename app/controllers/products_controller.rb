@@ -70,12 +70,12 @@ class ProductsController < ApplicationController
         redirect_to orders_path
       elsif Rating.where(user_id: current_user.id).where(product_id: product.id).any?
         flash[:notice] = "You have already rated this product"
-        redirect_to request.referer
+        redirect_to request.referrer
       else
         rating = Rating.new(rating_params)
         rating.user = current_user
         rating.save
-        redirect_to request.referer
+        redirect_to request.referrer
       end
     end
   end

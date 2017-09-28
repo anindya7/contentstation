@@ -35,7 +35,7 @@
           <ul class="list-group">
             <% unless @products.nil? %>
               <% unless @products.any? %>
-                No results found.
+                No articles available.
               <% else %>
                 <% @products.each do |product| %>
                   <li class="list-group-item">
@@ -55,9 +55,13 @@
                       <% end %>
                     </div>
                     <hr>
-                    <%= form_tag("/orders", method: "post") do %>
-                      <%= hidden_field_tag(:product_id, product.id) %>
-                      <%= submit_tag("Buy", class: "btn btn-success") %>
+                    <%  if product.exclusivity_id == Exclusivity.find_by_name('Free').id %>
+                      <%= form_tag("/orders", method: "post") do %>
+                        <%= hidden_field_tag(:product_id, product.id) %>
+                        <%= submit_tag("Buy", class: "btn btn-success") %>
+                      <% end %>
+                    <% else %>
+                      <%= link_to "Buy", paypal_checkout_path(product_id: product.id), class: 'btn btn-success' %>
                     <% end %>
                   </li>
                 <% end %>
